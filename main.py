@@ -66,7 +66,7 @@ class Data:
 				new_data = self.get_data()
 				if new_data != old_data:
 					self.data = new_data
-					print("Data updated.") # Shows when data is finalized with an update
+					print("Data updated..") # Shows when data is finalized with an update
 					break
 				time.sleep(5)
 
@@ -74,6 +74,8 @@ class Data:
 		t = threading.Thread(target=poll)
 		t.start()
 
+
+# Voice Assistant methods start here
 
 def speak(text):
 	engine = pyttsx3.init()
@@ -90,7 +92,7 @@ def get_audio():
 		try:
 			said = r.recognize_google(audio)
 		except Exception as e:
-			print("Exception:", str(e)) # Return nothing if the assitant doesn't understand
+			print("Did not recognize. Try again!", str(e)) # Return nothing if the assitant doesn't understand
 
 	return said.lower()
 
@@ -113,15 +115,15 @@ def main():
                     re.compile("[\w\s]+ deaths [\w\s]+"): lambda country: data.get_country_data(country)['total_deaths'],
 					}
 
-	UPDATE_COMMAND = "update" # update data command
+	UPDATE_COMMAND = "update" # Update data command
 
 	while True:
-		print("Listening...")
+		print("Listening...") # Shows on every loop, if a response is recorded program responds
 		text = get_audio()
 		print(text)
 		result = None
 
-		for pattern, func in COUNTRY_PATTERNS.items():
+		for pattern, func in COUNTRY_PATTERNS.items(): # Loops through COUNTRY_PATTERNS to see if they match
 			if pattern.match(text):
 				words = set(text.split(" "))
 				for country in country_list:
@@ -129,7 +131,7 @@ def main():
 						result = func(country)
 						break
 
-		for pattern, func in TOTAL_PATTERNS.items():
+		for pattern, func in TOTAL_PATTERNS.items(): # Loops through TOTAL_PATTERNS to see if they match
 			if pattern.match(text):
 				result = func()
 				break
